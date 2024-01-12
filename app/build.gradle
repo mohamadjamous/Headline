@@ -1,0 +1,102 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    namespace 'com.news.headline'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.news.headline"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.firebase:firebase-database:20.3.0'
+    implementation 'androidx.annotation:annotation-jvm:1.7.1'
+    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+
+
+
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+// Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-firestore")
+
+    // Also add the dependency for the Google Play services library and specify its version
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    def room_version = "2.6.0"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+//    // To use Kotlin annotation processing tool (kapt)
+//    kapt "androidx.room:room-compiler:$room_version"
+//    // To use Kotlin Symbol Processing (KSP)
+//    ksp "androidx.room:room-compiler:$room_version"
+
+    // optional - RxJava2 support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+    // optional - RxJava3 support for Room
+    implementation "androidx.room:room-rxjava3:$room_version"
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation "androidx.room:room-guava:$room_version"
+
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    // optional - Paging 3 Integration
+    implementation "androidx.room:room-paging:$room_version"
+
+
+
+
+    implementation "androidx.work:work-runtime:2.7.0"
+
+
+    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.1.0"
+
+}

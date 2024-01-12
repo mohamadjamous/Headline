@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Headline</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="create_account">Create account</string>
+    <string name="full_name">Full name</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="dob">Date of birth</string>
+    <string name="name">Name</string>
+    <string name="web_client">695053770312-ros6sennpdrvb571ah4bhjupgvjqj7s0.apps.googleusercontent.com</string>
+    <string name="error_fetching_emails">Error fetching emails</string>
+    <string name="error_email_sign_in">Error signing in email</string>
+    <string name="loading">loading</string>
+    <string name="post">Post</string>
+    <string name="publish_post">Publish a post</string>
+    <string name="create_post">Create Post</string>
+    <string name="publish">Publish</string>
+    <string name="add_photo">Add photo\n</string>
+    <string name="creating_your_account">Creating your account</string>
+    <string name="creating_post">Creating post</string>
+    <string name="login_account">Login Account</string>
+    <string name="login">Login</string>
+    <string name="logging_in">Loggin in</string>
+    <string name="sign_up">Don\'t have an account? Signup</string>
+    <string name="book_marks">Bookmarks</string>
+    <string name="fetching_posts">Fetching Posts</string>
+</resources>
