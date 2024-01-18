@@ -17,9 +17,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.news.headline.adapters.PostsAdapter;
 import com.news.headline.databinding.ActivityPostsBinding;
+import com.news.headline.db.entities.UserEntity;
 import com.news.headline.dialogs.CustomProgressDialog;
 import com.news.headline.R;
 import com.news.headline.models.PostModel;
+import com.news.headline.utils.Constants;
 import com.news.headline.viewmodels.PostViewModel;
 import com.news.headline.viewmodels.UserViewModel;
 
@@ -32,8 +34,9 @@ public class PostsActivity extends AppCompatActivity {
     private Context context;
     private AlertDialog dialog;
     private PostViewModel postViewModel;
-    private UserViewModel userViewModel;
     private ArrayList<PostModel> postModels;
+    private UserViewModel userViewModel;
+
 
 
     @Override
@@ -53,17 +56,29 @@ public class PostsActivity extends AppCompatActivity {
         binding.postsRecyclerView.setHasFixedSize(true);
         binding.postsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        fetchPosts();
+
 
 
         binding.createPost.setOnClickListener(view ->
         {
+            UserEntity userEntity = userViewModel.fetchUserFromDatabase().getValue();
             //check if user exists
-            if (!userDao.getAllUsers().isEmpty()) {
-                startActivity(new Intent(this, CreatePostActivity.class));
-            } else {
-                startActivity(new Intent(this, LoginActivity.class));
+             if (userEntity != null)
+            {
+                System.out.println("UserId: " + userViewModel.fetchUserFromDatabase().getValue().uid);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.USERNAME, userEntity.userName);
+                Intent intent = new Intent(PostsActivity.this, CreatePostActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
+            else
+            {
+                Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this,  LoginActivity.class));
+            }
+
         });
 
     }
@@ -103,90 +118,16 @@ public class PostsActivity extends AppCompatActivity {
     }
 
 
-    private void firebaseAuth(String idToken) {
-        AuthCredential authCredential = GoogleAuthProvider.getCredential(idToken, null);
-
-        auth.signInWithCredential(authCredential)
-                .addOnSuccessListener(authResult -> {
-
-
-                    startActivity(new Intent(this, SignupActivity.class));
-
-
-//                    User user = new User();
-//                    user.uid = firebaseUser.getUid();
-//                    user.email = firebaseUser.getEmail();
-//                    userDao.insertAll();
-
-
-                    binding.createPost.setEnabled(true);
-                    progressState(false);
-
-                }).addOnFailureListener(e -> {
-                    System.out.println("ErrorState: " + 1);
-                    Toast.makeText(context, getString(R.string.error_email_sign_in), Toast.LENGTH_LONG).show();
-                    binding.createPost.setEnabled(true);
-                    progressState(false);
-                });
-    }
-
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-
-        try {
-
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-
-        } catch (ApiException e) {
-
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            System.out.println("signInResult:failed code=" + e.getStatusCode());
-            System.out.println("signInResult:failed code=" + e.getMessage());
-            System.out.println("signInResult:failed code=" + e.getStatusMessage());
-            System.out.println("signInResult:failed code=" + e.getLocalizedMessage());
-            updateUI(null);
-        }
-
-    }
-
-    private void updateUI(GoogleSignInAccount account) {
-
-        if (account != null) {
-
-            System.out.println("AccountEmailValue: " + account.getEmail());
-            System.out.println("Email: " + account.getEmail());
-            System.out.println("FirstName: " + account.getGivenName());
-            System.out.println("LastName: " + account.getFamilyName());
-
-            Intent intent = new Intent(new Intent(this, SignupActivity.class));
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("email", account.getEmail());
-            bundle.putSerializable("name", account.getDisplayName() + " " + account.getFamilyName());
-            intent.putExtras(bundle);
-            startActivity(intent);
-
-            binding.createPost.setEnabled(true);
-
-        } else {
-
-            System.out.println("ErrorState: " + 2);
-            Toast.makeText(context, getString(R.string.error_email_sign_in), Toast.LENGTH_LONG).show();
-            binding.createPost.setEnabled(true);
-        }
-
-        progressState(false);
-    }
-
 
     private void initDialog(String message) {
         dialog = CustomProgressDialog.showCustomDialog(context, message, R.color.white);
     }
 
 
-
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        
+        fetchPosts();
+    }
 }

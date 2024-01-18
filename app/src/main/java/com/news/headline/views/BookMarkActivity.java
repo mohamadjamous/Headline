@@ -68,13 +68,13 @@ public class BookMarkActivity extends AppCompatActivity {
                             String title = (String) postMap.get("title");
                             String photoURL = (String) postMap.get("photoURL");
                             String userName = (String) postMap.get("userName");
-                            Date date = (Date) postMap.get("date");
+                            String date = (String) postMap.get("date");
                             posts.add(new PostModel(photoURL, description, title, userName, date));
                         }
 
                         bind.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-                        bind.recyclerView.setAdapter(new PostsAdapter(posts));
+//                        bind.recyclerView.setAdapter(new PostsAdapter(posts));
 
                     } else {
                         // Handle failed query

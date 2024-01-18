@@ -1,6 +1,8 @@
 package com.news.headline.views;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.room.Room;
 
 import android.app.AlertDialog;
@@ -14,13 +16,16 @@ import com.news.headline.R;
 import com.news.headline.db.AppDatabase;
 import com.news.headline.db.dao.UserDao;
 import com.news.headline.databinding.ActivityLoginBinding;
+import com.news.headline.viewmodels.UserViewModel;
+
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding bind;
-    private AppDatabase db;
-    private UserDao userDao;
     private AlertDialog dialog;
+
+    private UserViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +34,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(bind.getRoot());
 
 
-        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
-
-        userDao = db.userDao();
+        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        viewModel.init(this);
 
         bind.back.setOnClickListener(view -> finish());
-
-        bind.login.setOnClickListener(view -> {
-            loginUser(bind.email.getText().toString(), bind.password.getText().toString());
-        });
-
-        bind.signUp.setOnClickListener(view -> startActivity(new Intent(this, SignupActivity.class)));
+        bind.login.setOnClickListener(view -> loginUser(bind.email.getText().toString(), bind.password.getText().toString()));
+        bind.signUp.setOnClickListener(view -> {
+                    startActivity(new Intent(this, SignupActivity.class));
+                    finish();
+                }
+        );
 
     }
 
@@ -58,8 +62,21 @@ public class LoginActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             // Password is empty
             showToast("Please enter your password");
-            return;
         }
+
+
+        viewModel.loginUser(email, password).observe(this, userModel -> {
+
+            if (userModel != null) {
+                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, CreatePostActivity.class));
+                finish();
+            } else {
+                showToast("Invalid email or password");
+            }
+
+            progressState(false);
+        });
 
 
     }

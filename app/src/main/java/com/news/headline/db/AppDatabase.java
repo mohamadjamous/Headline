@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.news.headline.db.entities.UserEntity;
 import com.news.headline.db.dao.UserDao;
 
-@Database(entities = {UserEntity.class}, version = 3)
+@Database(entities = {UserEntity.class}, version = 7, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
@@ -19,7 +19,9 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    AppDatabase.class, "app_database").build();
+                                    AppDatabase.class, "app_database").allowMainThreadQueries()
+                            .fallbackToDestructiveMigration().build();
+
                 }
             }
         }

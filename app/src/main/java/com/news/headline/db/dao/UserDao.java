@@ -1,6 +1,7 @@
 package com.news.headline.db.dao;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -12,7 +13,7 @@ import com.news.headline.db.entities.UserEntity;
 public interface UserDao {
 
     @Query("SELECT * FROM users")
-    LiveData<UserEntity> getUser();
+    UserEntity getUser();
 
     @Insert
     void insertAll(UserEntity...users);

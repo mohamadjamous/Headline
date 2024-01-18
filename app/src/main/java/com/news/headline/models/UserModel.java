@@ -8,16 +8,21 @@ import java.util.Date;
 
 public class UserModel {
 
-    public String uid;
-    public String email;
-    public String photo;
-    public String userName;
+    public String uid, email, password, userName, dob;
 
 
-    public UserModel(String uid, String email, String photo, String userName) {
+    public UserModel(String uid, String email, String password, String userName, String dob) {
         this.uid = uid;
         this.email = email;
-        this.photo = photo;
+        this.password = password;
         this.userName = userName;
+        this.dob = dob;
+    }
+
+    public UserModel(String uid, String email, String userName, String dob) {
+        this.uid = uid;
+        this.email = email;
+        this.userName = userName;
+        this.dob = dob;
     }
 }

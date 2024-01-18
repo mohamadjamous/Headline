@@ -107,7 +107,7 @@
                     android:layout_height="match_parent"
                     android:gravity="top|left"
                     android:hint="Title"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textCapWords" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -124,7 +124,7 @@
                     android:layout_height="match_parent"
                     android:gravity="top|left"
                     android:hint="Description"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textMultiLine" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
