@@ -89,9 +89,15 @@ public class PostsRepo {
                 posts.postValue(postsList);
 
             } else {
+                System.out.println("ErrorGettingPosts: " + true);
 
                 // Handle the error.
                 posts.setValue(Collections.emptyList());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("ErrorGettingPosts: " + e.getMessage());
             }
         });
 

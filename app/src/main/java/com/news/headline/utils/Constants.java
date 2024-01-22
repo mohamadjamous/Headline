@@ -9,6 +9,7 @@ public class Constants {
     public static final String DESCRIPTION = "description";
     public static final String TITLE = "title";
     public static final String PHOTO_PATH = "photoPath";
+    public static final String POST = "post";
 
 
 }

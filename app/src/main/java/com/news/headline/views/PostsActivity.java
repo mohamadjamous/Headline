@@ -4,31 +4,29 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.news.headline.R;
 import com.news.headline.adapters.PostsAdapter;
 import com.news.headline.databinding.ActivityPostsBinding;
 import com.news.headline.db.entities.UserEntity;
 import com.news.headline.dialogs.CustomProgressDialog;
-import com.news.headline.R;
 import com.news.headline.models.PostModel;
 import com.news.headline.utils.Constants;
+import com.news.headline.utils.Listeners;
 import com.news.headline.viewmodels.PostViewModel;
 import com.news.headline.viewmodels.UserViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class PostsActivity extends AppCompatActivity {
+public class PostsActivity extends AppCompatActivity implements Listeners {
 
     public ActivityPostsBinding binding;
     private Context context;
@@ -36,7 +34,6 @@ public class PostsActivity extends AppCompatActivity {
     private PostViewModel postViewModel;
     private ArrayList<PostModel> postModels;
     private UserViewModel userViewModel;
-
 
 
     @Override
@@ -57,14 +54,16 @@ public class PostsActivity extends AppCompatActivity {
         binding.postsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
 
+        binding.logout.setOnClickListener(view -> {
+            userViewModel.logoutUser(userViewModel.fetchUserFromDatabase().getValue());
+            restartApp(context);
+        });
 
-
-        binding.createPost.setOnClickListener(view ->
+        binding.fab.setOnClickListener(view ->
         {
             UserEntity userEntity = userViewModel.fetchUserFromDatabase().getValue();
             //check if user exists
-             if (userEntity != null)
-            {
+            if (userEntity != null) {
                 System.out.println("UserId: " + userViewModel.fetchUserFromDatabase().getValue().uid);
 
                 Bundle bundle = new Bundle();
@@ -72,11 +71,9 @@ public class PostsActivity extends AppCompatActivity {
                 Intent intent = new Intent(PostsActivity.this, CreatePostActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
-            }
-            else
-            {
+            } else {
                 Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this,  LoginActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
             }
 
         });
@@ -95,8 +92,7 @@ public class PostsActivity extends AppCompatActivity {
     }
 
 
-    private void fetchPosts()
-    {
+    private void fetchPosts() {
         initDialog(getString(R.string.loading));
         progressState(true);
 
@@ -114,9 +110,10 @@ public class PostsActivity extends AppCompatActivity {
     }
 
     private void setPostsAdapter() {
-        binding.postsRecyclerView.setAdapter(new PostsAdapter( postModels ,getApplicationContext()));
-    }
 
+        System.out.println("PostsModelsSize: " + postModels.size());
+        binding.postsRecyclerView.setAdapter(new PostsAdapter(postModels, getApplicationContext(), this));
+    }
 
 
     private void initDialog(String message) {
@@ -127,7 +124,35 @@ public class PostsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        
+
+        hideShowLogout();
         fetchPosts();
+    }
+
+
+    private void hideShowLogout() {
+        UserEntity userEntity = userViewModel.fetchUserFromDatabase().getValue();
+
+        //check if user exists
+        if (userEntity != null)
+            binding.logout.setVisibility(View.VISIBLE);
+        else
+            binding.logout.setVisibility(View.GONE);
+    }
+
+    public static void restartApp(Context context) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
+
+    @Override
+    public void onPostClick(PostModel postModel) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.POST, postModel);
+        Intent intent = new Intent(this, PostActivity.class);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
     }
 }

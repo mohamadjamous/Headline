@@ -29,6 +29,10 @@ public class UserViewModel extends ViewModel {
         return userRepo.loginFirebaseUser(email, password);
     }
 
+    public void logoutUser(UserEntity user){
+        userRepo.logout(user);
+    }
+
 
     public MutableLiveData<UserModel> createUser(String email, String password, String username, String dob){
         return userRepo.createFirebaseUser(email, password, username, dob);

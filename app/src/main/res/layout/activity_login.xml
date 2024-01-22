@@ -71,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:gravity="top|left"
                 android:hint="Password"
-                android:inputType="textEmailAddress" />
+                android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

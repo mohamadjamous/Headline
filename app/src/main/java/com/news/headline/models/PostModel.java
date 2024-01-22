@@ -1,8 +1,9 @@
 package com.news.headline.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PostModel {
+public class PostModel implements Serializable {
 
 
     public String photoUrl, description, title, userName, date;

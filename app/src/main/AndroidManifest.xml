@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Headline"
         tools:targetApi="31">
         <activity
+            android:name=".views.PostActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.BookMarkActivity"
             android:exported="false" />
         <activity

@@ -25,4 +25,7 @@
     <string name="sign_up">Don\'t have an account? Signup</string>
     <string name="book_marks">Bookmarks</string>
     <string name="fetching_posts">Fetching Posts</string>
+    <string name="logout">logout</string>
+    <string name="error_loading_post">error loading post</string>
+    <string name="copied_text">copied text</string>
 </resources>

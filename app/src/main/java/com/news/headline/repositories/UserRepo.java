@@ -183,5 +183,10 @@ public class UserRepo {
         return mutableLiveData[0];
     }
 
+    public void logout(UserEntity user)
+    {
+        userDao.delete(user);
+    }
+
 
 }
