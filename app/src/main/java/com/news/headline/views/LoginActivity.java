@@ -49,9 +49,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginUser(String email, String password) {
 
-        initDialog(getString(R.string.logging_in));
-        progressState(true);
-
         // Validate email and password
         if (TextUtils.isEmpty(email)) {
             // Email is empty
@@ -62,8 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             // Password is empty
             showToast("Please enter your password");
+            return;
         }
 
+        initDialog(getString(R.string.logging_in));
+        progressState(true);
 
         viewModel.loginUser(email, password).observe(this, userModel -> {
 

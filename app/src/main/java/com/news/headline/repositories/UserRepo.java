@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +57,7 @@ public class UserRepo {
     }
 
 
+    //create new user upload to firestore and save in room database
     public MutableLiveData<UserModel> createFirebaseUser(String email, String password, String username, String dob) {
 
         final MutableLiveData<UserModel>[] mutableLiveData = new MutableLiveData[]{new MutableLiveData<>()};
@@ -160,21 +162,30 @@ public class UserRepo {
 
                                 mutableLiveData[0].setValue(userModel);
                             } else {
+                                System.out.println("ErrorLoggingUser:  " + 0);
                                 mutableLiveData[0].setValue(null);
                             }
 
                         } else {
 
+                            System.out.println("ErrorLoggingUser:  " + 1);
                             // Handle the error.
                             mutableLiveData[0].setValue(null);
                         }
                     });
                 }
 
+                System.out.println("ErrorLoggingUser:  " + 2);
                 mutableLiveData[0].setValue(null);
             } else {
-                // If sign in fails, display a message to the user.
 
+                // If sign in fails, display a message to the user.
+                System.out.println("ErrorLoggingUser:  " + 3);
+
+                task.addOnFailureListener(e -> {
+//                    mutableLiveData[0].setValue(new UserModel("", "", "", "", ""));
+                    System.out.println("ErrorMessage: "  + e.getMessage());
+                });
                 mutableLiveData[0].setValue(null);
             }
 

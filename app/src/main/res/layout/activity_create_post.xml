@@ -94,6 +94,17 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/edit_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_photo"
+                android:gravity="right"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/holo_blue_dark"
+                android:visibility="gone"
+                />
+
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

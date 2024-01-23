@@ -1,46 +1,28 @@
 package com.news.headline.views;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.news.headline.R;
 import com.news.headline.databinding.ActivityCreatePostBinding;
 import com.news.headline.dialogs.CustomProgressDialog;
 import com.news.headline.utils.Constants;
-import com.news.headline.utils.FirebaseImageUploader;
 import com.news.headline.viewmodels.PostViewModel;
 import com.news.headline.viewmodels.UserViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class CreatePostActivity extends AppCompatActivity {
 
@@ -68,12 +50,14 @@ public class CreatePostActivity extends AppCompatActivity {
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.init(this);
 
+
         userName = getIntent().getStringExtra(Constants.USERNAME);
 
 
         binding.back.setOnClickListener(view -> finish());
         binding.addPhoto.setOnClickListener(view -> addPhoto());
         binding.publish.setOnClickListener(view -> createPost());
+        binding.editPhoto.setOnClickListener(view -> addPhoto());
 
 
     }
@@ -138,6 +122,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private void initDialog(String message) {
         dialog = CustomProgressDialog.showCustomDialog(context, message, R.color.white);
+        dialog.setCancelable(false);
     }
 
     //show & hide progress bar
@@ -164,11 +149,15 @@ public class CreatePostActivity extends AppCompatActivity {
 
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
         builder.setTitle("Choose an option");
         builder.setItems(options, (dialog, item) -> {
             if (options[item].equals("Take Photo")) {
+
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE_PHOTO);
                 }
             } else if (options[item].equals("Choose from Gallery")) {
@@ -177,6 +166,8 @@ public class CreatePostActivity extends AppCompatActivity {
                 startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_GALLERY);
             } else if (options[item].equals("Cancel")) {
                 dialog.dismiss();
+                binding.addPhoto.setVisibility(View.VISIBLE);
+                binding.progress.setVisibility(View.GONE);
             }
         });
         builder.show();
@@ -189,49 +180,53 @@ public class CreatePostActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE_PHOTO && resultCode == RESULT_OK) {
 
-            // Get the Uri of data
-            filePath = data.getData();
-            try {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
 
-                // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                        context.getContentResolver(),
-                        filePath);
-                binding.imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                // Log the exception
-                System.out.println("ErrorMessage: " + e.getMessage());
+            if (photo != null) {
+                filePath = getImageUri(this, photo);
+                binding.imageView.setImageBitmap(photo);
+                binding.editPhoto.setVisibility(View.VISIBLE);
+            } else {
                 Toast.makeText(context, "Error choosing image", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
             }
+
+
+
+
         } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
             // Get the Uri of data
             filePath = data.getData();
             try {
 
                 // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                        context.getContentResolver(),
-                        filePath);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), filePath);
                 binding.imageView.setImageBitmap(bitmap);
+                binding.editPhoto.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 // Log the exception
                 System.out.println("ErrorMessage: " + e.getMessage());
                 Toast.makeText(context, "Error choosing image", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+        }else
+        {
+            binding.addPhoto.setVisibility(View.VISIBLE);
+            binding.progress.setVisibility(View.GONE);
         }
+
+
+        System.out.println("FileUri: " + filePath);
+
 
         binding.progress.setVisibility(View.GONE);
     }
 
 
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
 }
-
-
-
-
-
-
-
-

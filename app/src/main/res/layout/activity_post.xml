@@ -29,6 +29,7 @@
             android:layout_margin="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +39,7 @@
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
@@ -51,7 +53,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:drawableLeft="@drawable/calendar_icon"
+                android:textColor="@android:color/white"
+                android:drawableLeft="@drawable/calendar_icon_white"
                 android:drawablePadding="5dp"
                 android:textSize="14sp"
                 tools:text="Sep, 19, 2021" />
@@ -62,7 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
-                android:drawableLeft="@drawable/edit_icon"
+                android:drawableLeft="@drawable/edit_icon_white"
+                android:textColor="@android:color/white"
                 android:drawablePadding="5dp"
                 android:textSize="14sp"
                 tools:text="username" />
@@ -82,10 +86,10 @@
 
         <ImageView
             android:id="@+id/copy_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_margin="20dp"
-            android:src="@drawable/close_icon"
+            android:src="@drawable/copy_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
