@@ -18,6 +18,8 @@ Author Details <br />
 
 Room Database <br />
 Java <br />
+MVVM architecture<br />
+LiveData, ViewModel<br />
 Firebase Firestore<br />
 Firebase Authentication<br />
 Android Studio IDE<br />
